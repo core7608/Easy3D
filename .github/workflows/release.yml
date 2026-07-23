@@ -35,7 +35,7 @@ jobs:
         tar -czf ../Easy3D-osx-arm64.tar.gz osx-arm64/
     
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         files: |
           Easy3D-win-x64.zip
