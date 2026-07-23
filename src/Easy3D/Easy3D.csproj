@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
+    <AssemblyName>Easy3D</AssemblyName>
+    <RootNamespace>Easy3D</RootNamespace>
+    <Version>2.0.0</Version>
+    <Authors>Easy3D Team</Authors>
+    <Company>Easy3D</Company>
+    <Product>Easy3D - برنامج التصميم ثلاثي الأبعاد</Product>
+    <Description>برنامج تصميم ثلاثي الأبعاد متقدم يعمل على جميع المنصات</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/yourusername/Easy3D</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Skia" Version="11.0.6" />
+    <!--#if (!NoVm)-->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.6" Condition="'$(Configuration)' == 'Debug'" />
+    <!--#endif-->
+    <PackageReference Include="SkiaSharp" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.7" />
+    <PackageReference Include="ReactiveUI" Version="19.5.31" />
+    <PackageReference Include="ReactiveUI.Fody" Version="19.5.31" />
+    <PackageReference Include="DynamicData" Version="8.3.27" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Easy3D.Core\Easy3D.Core.csproj" />
+    <ProjectReference Include="..\Easy3D.Geometry\Easy3D.Geometry.csproj" />
+    <ProjectReference Include="..\Easy3D.Rendering\Easy3D.Rendering.csproj" />
+    <ProjectReference Include="..\Easy3D.Exporters\Easy3D.Exporters.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+</Project>

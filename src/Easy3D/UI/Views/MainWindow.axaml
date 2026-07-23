@@ -1,0 +1,306 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:Easy3D.UI.Views"
+        x:Class="Easy3D.UI.Views.MainWindow"
+        Title="Easy3D - برنامج التصميم ثلاثي الأبعاد"
+        Width="1400" Height="900"
+        MinWidth="1000" MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#1e1e2e">
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewProjectCommand}"/>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenProjectCommand}"/>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveProjectCommand}"/>
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+        <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCommand}"/>
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding UndoCommand}"/>
+        <KeyBinding Gesture="Ctrl+Y" Command="{Binding RedoCommand}"/>
+        <KeyBinding Gesture="Ctrl+D" Command="{Binding DuplicateCommand}"/>
+        <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}"/>
+        <KeyBinding Gesture="W" Command="{Binding SelectToolCommand}"/>
+        <KeyBinding Gesture="G" Command="{Binding MoveToolCommand}"/>
+        <KeyBinding Gesture="R" Command="{Binding RotateToolCommand}"/>
+        <KeyBinding Gesture="S" Command="{Binding ScaleToolCommand}"/>
+        <KeyBinding Gesture="F" Command="{Binding FocusSelectedCommand}"/>
+        <KeyBinding Gesture="A" Command="{Binding AddObjectCommand}"/>
+    </Window.KeyBindings>
+
+    <DockPanel>
+        <!-- شريط القوائم -->
+        <Menu DockPanel.Dock="Top" Background="#2d2d44" Foreground="White">
+            <MenuItem Header="_ملف">
+                <MenuItem Header="_جديد" InputGesture="Ctrl+N" Command="{Binding NewProjectCommand}"/>
+                <MenuItem Header="_فتح..." InputGesture="Ctrl+O" Command="{Binding OpenProjectCommand}"/>
+                <MenuItem Header="_حفظ" InputGesture="Ctrl+S" Command="{Binding SaveProjectCommand}"/>
+                <MenuItem Header="حفظ _باسم..." InputGesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+                <Separator/>
+                <MenuItem Header="_استيراد...">
+                    <MenuItem Header="OBJ" Command="{Binding ImportOBJCommand}"/>
+                    <MenuItem Header="STL" Command="{Binding ImportSTLCommand}"/>
+                    <MenuItem Header="GLTF" Command="{Binding ImportGLTFCommand}"/>
+                    <MenuItem Header="PLY" Command="{Binding ImportPLYCommand}"/>
+                </MenuItem>
+                <MenuItem Header="تص_دير...">
+                    <MenuItem Header="OBJ (*.obj)" Command="{Binding ExportOBJCommand}"/>
+                    <MenuItem Header="STL (*.stl)" Command="{Binding ExportSTLCommand}"/>
+                    <MenuItem Header="GLTF (*.gltf)" Command="{Binding ExportGLTFCommand}"/>
+                    <MenuItem Header="Three.js (*.json)" Command="{Binding ExportThreeJSCommand}"/>
+                    <MenuItem Header="FBX (*.fbx)" Command="{Binding ExportFBXCommand}"/>
+                    <MenuItem Header="PLY (*.ply)" Command="{Binding ExportPLYCommand}"/>
+                    <MenuItem Header="COLLADA (*.dae)" Command="{Binding ExportCOLLADACommand}"/>
+                    <MenuItem Header="X3D (*.x3d)" Command="{Binding ExportX3DCommand}"/>
+                    <MenuItem Header="VRML (*.wrl)" Command="{Binding ExportVRMLCommand}"/>
+                    <MenuItem Header="USD (*.usd)" Command="{Binding ExportUSDCommand}"/>
+                    <MenuItem Header="AMF (*.amf)" Command="{Binding ExportAMFCommand}"/>
+                    <MenuItem Header="OFF (*.off)" Command="{Binding ExportOFFCommand}"/>
+                    <MenuItem Header="CSV (*.csv)" Command="{Binding ExportCSVCommand}"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="خ_روج" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_تحرير">
+                <MenuItem Header="ت_راجع" InputGesture="Ctrl+Z" Command="{Binding UndoCommand}"/>
+                <MenuItem Header="إ_عادة" InputGesture="Ctrl+Y" Command="{Binding RedoCommand}"/>
+                <Separator/>
+                <MenuItem Header="ت_كرار" InputGesture="Ctrl+D" Command="{Binding DuplicateCommand}"/>
+                <MenuItem Header="_حذف" InputGesture="Delete" Command="{Binding DeleteCommand}"/>
+                <Separator/>
+                <MenuItem Header="تحديد الكل" Command="{Binding SelectAllCommand}"/>
+                <MenuItem Header="إلغاء التحديد" Command="{Binding DeselectAllCommand}"/>
+            </MenuItem>
+            <MenuItem Header="إ_ضافة">
+                <MenuItem Header="⬜ مكعب" Command="{Binding AddCubeCommand}"/>
+                <MenuItem Header="⭕ كرة" Command="{Binding AddSphereCommand}"/>
+                <MenuItem Header="🔵 أسطوانة" Command="{Binding AddCylinderCommand}"/>
+                <MenuItem Header="🔺 مخروط" Command="{Binding AddConeCommand}"/>
+                <MenuItem Header="▬ مستوي" Command="{Binding AddPlaneCommand}"/>
+                <MenuItem Header="💍 حلقة" Command="{Binding AddTorusCommand}"/>
+                <MenuItem Header="⬡ كرة إيكو" Command="{Binding AddIcosphereCommand}"/>
+                <MenuItem Header="⭐ نجمة" Command="{Binding AddStarCommand}"/>
+                <Separator/>
+                <MenuItem Header="☀️ إضاءة اتجاهية" Command="{Binding AddDirectionalLightCommand}"/>
+                <MenuItem Header="💡 إضاءة نقطية" Command="{Binding AddPointLightCommand}"/>
+                <MenuItem Header="🔦 إضاءة مخروطية" Command="{Binding AddSpotLightCommand}"/>
+            </MenuItem>
+            <MenuItem Header="أ_دوات">
+                <MenuItem Header="تقسيم" Command="{Binding SubdivideCommand}"/>
+                <MenuItem Header="تبسيط" Command="{Binding DecimateCommand}"/>
+                <MenuItem Header="قلب الأوجه" Command="{Binding FlipNormalsCommand}"/>
+                <MenuItem Header="تطبيق التحويل" Command="{Binding ApplyTransformCommand}"/>
+                <MenuItem Header="حساب الأعمدة" Command="{Binding CalculateNormalsCommand}"/>
+                <MenuItem Header="حساب المماسات" Command="{Binding CalculateTangentsCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_عرض">
+                <MenuItem Header="أمامي (Numpad 1)" Command="{Binding ViewFrontCommand}"/>
+                <MenuItem Header="خلفي" Command="{Binding ViewBackCommand}"/>
+                <MenuItem Header="يمين (Numpad 3)" Command="{Binding ViewRightCommand}"/>
+                <MenuItem Header="يسار" Command="{Binding ViewLeftCommand}"/>
+                <MenuItem Header="علوي (Numpad 7)" Command="{Binding ViewTopCommand}"/>
+                <MenuItem Header="سفلي" Command="{Binding ViewBottomCommand}"/>
+                <Separator/>
+                <MenuItem Header="إعادة تعيين الكاميرا" Command="{Binding ResetCameraCommand}"/>
+                <Separator/>
+                <MenuItem Header="شبكة" IsChecked="{Binding ShowGrid}" Command="{Binding ToggleGridCommand}"/>
+                <MenuItem Header="محاور" IsChecked="{Binding ShowAxes}" Command="{Binding ToggleAxesCommand}"/>
+                <MenuItem Header="حدود" IsChecked="{Binding ShowBoundingBoxes}" Command="{Binding ToggleBoundingBoxesCommand}"/>
+                <MenuItem Header="سلكي" IsChecked="{Binding ShowWireframe}" Command="{Binding ToggleWireframeCommand}"/>
+                <MenuItem Header="أعمدة" IsChecked="{Binding ShowNormals}" Command="{Binding ToggleNormalsCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_مساعدة">
+                <MenuItem Header="الاختصارات" Command="{Binding ShowShortcutsCommand}"/>
+                <MenuItem Header="حول البرنامج" Command="{Binding ShowAboutCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- شريط الأدوات -->
+        <Border DockPanel.Dock="Top" Background="#252540" Padding="4">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <TextBlock Text="الوضع:" VerticalAlignment="Center" Foreground="#8888aa" Margin="0,0,4,0"/>
+                <RadioButton Content="كائن" IsChecked="{Binding IsObjectMode}" GroupName="Mode" Foreground="White"/>
+                <RadioButton Content="تحرير" IsChecked="{Binding IsEditMode}" GroupName="Mode" Foreground="White"/>
+                <RadioButton Content="نحت" IsChecked="{Binding IsSculptMode}" GroupName="Mode" Foreground="White"/>
+                <Border Width="1" Background="#3a3a5a" Margin="8,4"/>
+                <TextBlock Text="الأداة:" VerticalAlignment="Center" Foreground="#8888aa" Margin="0,0,4,0"/>
+                <RadioButton Content="🔍" IsChecked="{Binding IsSelectTool}" GroupName="Tool" ToolTip.Tip="اختيار (W)" Foreground="White"/>
+                <RadioButton Content="✥" IsChecked="{Binding IsMoveTool}" GroupName="Tool" ToolTip.Tip="تحريك (G)" Foreground="White"/>
+                <RadioButton Content="↻" IsChecked="{Binding IsRotateTool}" GroupName="Tool" ToolTip.Tip="تدوير (R)" Foreground="White"/>
+                <RadioButton Content="⤡" IsChecked="{Binding IsScaleTool}" GroupName="Tool" ToolTip.Tip="تحجيم (S)" Foreground="White"/>
+                <Border Width="1" Background="#3a3a5a" Margin="8,4"/>
+                <TextBlock Text="العرض:" VerticalAlignment="Center" Foreground="#8888aa" Margin="0,0,4,0"/>
+                <RadioButton Content="صلب" IsChecked="{Binding IsSolidMode}" GroupName="Render" Foreground="White"/>
+                <RadioButton Content="سلكي" IsChecked="{Binding IsWireframeMode}" GroupName="Render" Foreground="White"/>
+                <RadioButton Content="نصيري" IsChecked="{Binding IsPBRMode}" GroupName="Render" Foreground="White"/>
+            </StackPanel>
+        </Border>
+
+        <!-- المحتوى الرئيسي -->
+        <DockPanel>
+            <!-- قائمة الكائنات (يسار) -->
+            <Border DockPanel.Dock="Left" Width="220" Background="#252540" BorderBrush="#3a3a5a" BorderThickness="0,0,1,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="الكائنات" FontWeight="Bold" FontSize="14" Foreground="White" Margin="10,10,10,5"/>
+                    <ListBox ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}"
+                             Background="Transparent" Foreground="White" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <TextBlock Text="{Binding Icon}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- لوحة الخصائص (يمين) -->
+            <Border DockPanel.Dock="Right" Width="300" Background="#252540" BorderBrush="#3a3a5a" BorderThickness="1,0,0,0">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <TextBlock Text="الخصائص" FontWeight="Bold" FontSize="14" Foreground="White" Margin="0,0,0,10"/>
+
+                        <!-- الموضع -->
+                        <Expander Header="الموضع" IsExpanded="True" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="X:" Width="20" Foreground="#ff4444" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding PosX}" Increment="0.1" FormatString="F2" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Y:" Width="20" Foreground="#44ff44" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding PosY}" Increment="0.1" FormatString="F2" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Z:" Width="20" Foreground="#4444ff" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding PosZ}" Increment="0.1" FormatString="F2" Width="100"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- التدوير -->
+                        <Expander Header="التدوير" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="X:" Width="20" Foreground="#ff4444" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding RotX}" Increment="1" FormatString="F1" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Y:" Width="20" Foreground="#44ff44" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding RotY}" Increment="1" FormatString="F1" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Z:" Width="20" Foreground="#4444ff" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding RotZ}" Increment="1" FormatString="F1" Width="100"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- الحجم -->
+                        <Expander Header="الحجم" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="X:" Width="20" Foreground="#ff4444" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding ScaleX}" Increment="0.1" FormatString="F2" Minimum="0.01" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Y:" Width="20" Foreground="#44ff44" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding ScaleY}" Increment="0.1" FormatString="F2" Minimum="0.01" Width="100"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Z:" Width="20" Foreground="#4444ff" VerticalAlignment="Center"/>
+                                    <NumericUpDown Value="{Binding ScaleZ}" Increment="0.1" FormatString="F2" Minimum="0.01" Width="100"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- المادة -->
+                        <Expander Header="المادة" IsExpanded="True" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="النمط:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <ComboBox SelectedIndex="{Binding ShadingModelIndex}" Width="120">
+                                        <ComboBoxItem Content="بدون إضاءة"/>
+                                        <ComboBoxItem Content="لامبرت"/>
+                                        <ComboBoxItem Content="فونغ"/>
+                                        <ComboBoxItem Content="بلين-فونغ"/>
+                                        <ComboBoxItem Content="PBR"/>
+                                        <ComboBoxItem Content="كرتوني"/>
+                                        <ComboBoxItem Content="مسطح"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="اللون:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Border Width="30" Height="20" Background="{Binding AlbedoColorHex}" BorderBrush="#3a3a5a" BorderThickness="1" CornerRadius="3" Cursor="Hand"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="المعدنية:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding Metalness}" Minimum="0" Maximum="1" Width="120"/>
+                                    <TextBlock Text="{Binding Metalness, StringFormat={}{0:F2}}" Width="40" Foreground="#8888aa" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="الخشونة:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding Roughness}" Minimum="0" Maximum="1" Width="120"/>
+                                    <TextBlock Text="{Binding Roughness, StringFormat={}{0:F2}}" Width="40" Foreground="#8888aa" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="الشفافية:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding Opacity}" Minimum="0" Maximum="1" Width="120"/>
+                                    <TextBlock Text="{Binding Opacity, StringFormat={}{0:F2}}" Width="40" Foreground="#8888aa" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="اللمعان:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding Shininess}" Minimum="1" Maximum="256" Width="120"/>
+                                    <TextBlock Text="{Binding Shininess, StringFormat={}{0:F0}}" Width="40" Foreground="#8888aa" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <TextBlock Text="الانبعاث:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding EmissiveIntensity}" Minimum="0" Maximum="5" Width="120"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- الإضاءة -->
+                        <Expander Header="الإضاءة" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="الشدة:" Width="60" VerticalAlignment="Center" Foreground="White"/>
+                                    <Slider Value="{Binding LightIntensity}" Minimum="0" Maximum="5" Width="120"/>
+                                </StackPanel>
+                                <CheckBox Content="الظلال" IsChecked="{Binding CastShadows}" Foreground="White" Margin="0,4"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- معلومات -->
+                        <Expander Header="معلومات" Foreground="White">
+                            <StackPanel Margin="10,5">
+                                <TextBlock Text="{Binding Stats}" Foreground="#8888aa" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- منطقة الرسم -->
+            <Panel>
+                <Image Name="ViewportImage" Stretch="None"/>
+                <Canvas Name="OverlayCanvas"/>
+                <!-- إحصائيات -->
+                <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding StatusText}" Foreground="#8888aa" FontSize="11"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding FPS}" Foreground="#8888aa" FontSize="11"/>
+                </StackPanel>
+            </Panel>
+        </DockPanel>
+
+        <!-- شريط الحالة -->
+        <Border DockPanel.Dock="Bottom" Background="#1e1e2e" Padding="6,3">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding ObjectCount}" Foreground="#8888aa" FontSize="11"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="#8888aa" FontSize="11"/>
+            </DockPanel>
+        </Border>
+    </DockPanel>
+</Window>

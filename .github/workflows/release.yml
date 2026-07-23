@@ -1,0 +1,45 @@
+name: Release Easy3D
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Publish All Platforms
+      run: |
+        dotnet publish src/Easy3D -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o release/win-x64
+        dotnet publish src/Easy3D -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o release/linux-x64
+        dotnet publish src/Easy3D -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -o release/osx-x64
+        dotnet publish src/Easy3D -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -o release/osx-arm64
+    
+    - name: Create Archives
+      run: |
+        cd release
+        zip -r ../Easy3D-win-x64.zip win-x64/
+        tar -czf ../Easy3D-linux-x64.tar.gz linux-x64/
+        tar -czf ../Easy3D-osx-x64.tar.gz osx-x64/
+        tar -czf ../Easy3D-osx-arm64.tar.gz osx-arm64/
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          Easy3D-win-x64.zip
+          Easy3D-linux-x64.tar.gz
+          Easy3D-osx-x64.tar.gz
+          Easy3D-osx-arm64.tar.gz
+        generate_release_notes: true

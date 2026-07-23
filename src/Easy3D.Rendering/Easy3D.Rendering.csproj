@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Easy3D.Rendering</RootNamespace>
+    <AssemblyName>Easy3D.Rendering</AssemblyName>
+    <Version>2.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Easy3D.Core\Easy3D.Core.csproj" />
+    <ProjectReference Include="..\Easy3D.Geometry\Easy3D.Geometry.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.7" />
+  </ItemGroup>
+
+</Project>

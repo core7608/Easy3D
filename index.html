@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy3D - برنامج التصميم ثلاثي الأبعاد</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- شريط القوائم العلوي -->
+    <div id="top-bar">
+        <div class="logo">
+            <span class="logo-icon">🎨</span>
+            <span class="logo-text">Easy3D</span>
+        </div>
+        <div class="menu-bar">
+            <div class="menu-item" id="menu-file">ملف
+                <div class="dropdown">
+                    <div class="dropdown-item" onclick="newProject()">جديد</div>
+                    <div class="dropdown-item" onclick="saveProject()">حفظ</div>
+                    <div class="dropdown-item" onclick="loadProject()">فتح</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="exportOBJ()">تصدير OBJ</div>
+                    <div class="dropdown-item" onclick="exportSTL()">تصدير STL</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menu-edit">تحرير
+                <div class="dropdown">
+                    <div class="dropdown-item" onclick="undo()">تراجع (Ctrl+Z)</div>
+                    <div class="dropdown-item" onclick="redo()">إعادة (Ctrl+Y)</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="duplicateObject()">تكرار (Shift+D)</div>
+                    <div class="dropdown-item" onclick="deleteObject()">حذف (X)</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menu-add">إضافة
+                <div class="dropdown">
+                    <div class="dropdown-item" onclick="addCube()">مكعب</div>
+                    <div class="dropdown-item" onclick="addSphere()">كرة</div>
+                    <div class="dropdown-item" onclick="addCylinder()">أسطوانة</div>
+                    <div class="dropdown-item" onclick="addCone()">مخروط</div>
+                    <div class="dropdown-item" onclick="addPlane()">مستوي</div>
+                    <div class="dropdown-item" onclick="addTorus()">حلقة</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menu-view">عرض
+                <div class="dropdown">
+                    <div class="dropdown-item" onclick="setView('front')">أمامي</div>
+                    <div class="dropdown-item" onclick="setView('back')">خلفي</div>
+                    <div class="dropdown-item" onclick="setView('top')">علوي</div>
+                    <div class="dropdown-item" onclick="setView('bottom')">سفلي</div>
+                    <div class="dropdown-item" onclick="setView('right')">يمين</div>
+                    <div class="dropdown-item" onclick="setView('left')">يسار</div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="resetView()">إعادة تعيين الكاميرا</div>
+                </div>
+            </div>
+        </div>
+        <div class="top-actions">
+            <button class="mode-btn active" id="object-mode" onclick="setMode('object')">وضع الكائن</button>
+            <button class="mode-btn" id="edit-mode" onclick="setMode('edit')">وضع التحرير</button>
+            <button class="mode-btn" id="sculpt-mode" onclick="setMode('sculpt')">وضع النحت</button>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div id="main-content">
+        <!-- الأدوات اليسرى -->
+        <div id="left-toolbar">
+            <div class="tool-group">
+                <div class="tool-title">الأدوات</div>
+                <button class="tool-btn active" id="tool-select" onclick="setTool('select')" title="اختيار (W)">
+                    <span>🔍</span>
+                    <small>اختيار</small>
+                </button>
+                <button class="tool-btn" id="tool-move" onclick="setTool('move')" title="تحريك (G)">
+                    <span>✥</span>
+                    <small>تحريك</small>
+                </button>
+                <button class="tool-btn" id="tool-rotate" onclick="setTool('rotate')" title="تدوير (R)">
+                    <span>↻</span>
+                    <small>تدوير</small>
+                </button>
+                <button class="tool-btn" id="tool-scale" onclick="setTool('scale')" title="تكبير/تصغير (S)">
+                    <span>⤡</span>
+                    <small>تحجيم</small>
+                </button>
+            </div>
+            <div class="tool-group">
+                <div class="tool-title">الإنشاء</div>
+                <button class="tool-btn" onclick="addCube()" title="مكعب">
+                    <span>⬜</span>
+                    <small>مكعب</small>
+                </button>
+                <button class="tool-btn" onclick="addSphere()" title="كرة">
+                    <span>⭕</span>
+                    <small>كرة</small>
+                </button>
+                <button class="tool-btn" onclick="addCylinder()" title="أسطوانة">
+                    <span>🔵</span>
+                    <small>أسطوانة</small>
+                </button>
+                <button class="tool-btn" onclick="addCone()" title="مخروط">
+                    <span>🔺</span>
+                    <small>مخروط</small>
+                </button>
+                <button class="tool-btn" onclick="addPlane()" title="مستوي">
+                    <span>▬</span>
+                    <small>مستوي</small>
+                </button>
+                <button class="tool-btn" onclick="addTorus()" title="حلقة">
+                    <span>💍</span>
+                    <small>حلقة</small>
+                </button>
+            </div>
+        </div>
+
+        <!-- منطقة العرض ثلاثية الأبعاد -->
+        <div id="viewport">
+            <canvas id="canvas3d"></canvas>
+            <div id="viewport-info">
+                <span id="object-count">الكائنات: 0</span>
+                <span id="fps-counter">FPS: 60</span>
+            </div>
+            <div id="axis-helper">
+                <div class="axis x">X</div>
+                <div class="axis y">Y</div>
+                <div class="axis z">Z</div>
+            </div>
+        </div>
+
+        <!-- اللوحة اليمنى -->
+        <div id="right-panel">
+            <!-- خصائص الكائن -->
+            <div class="panel-section" id="properties-panel">
+                <div class="panel-header" onclick="togglePanel('properties')">
+                    <span>الخصائص</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="panel-content" id="properties-content">
+                    <div class="property-group">
+                        <div class="property-title">التحويل</div>
+                        <div class="property-row">
+                            <label>الموضع</label>
+                            <div class="vector-input">
+                                <div class="input-group x">
+                                    <span>X</span>
+                                    <input type="number" id="pos-x" value="0" step="0.1" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group y">
+                                    <span>Y</span>
+                                    <input type="number" id="pos-y" value="0" step="0.1" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group z">
+                                    <span>Z</span>
+                                    <input type="number" id="pos-z" value="0" step="0.1" onchange="updateTransform()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="property-row">
+                            <label>التدوير</label>
+                            <div class="vector-input">
+                                <div class="input-group x">
+                                    <span>X</span>
+                                    <input type="number" id="rot-x" value="0" step="1" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group y">
+                                    <span>Y</span>
+                                    <input type="number" id="rot-y" value="0" step="1" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group z">
+                                    <span>Z</span>
+                                    <input type="number" id="rot-z" value="0" step="1" onchange="updateTransform()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="property-row">
+                            <label>الحجم</label>
+                            <div class="vector-input">
+                                <div class="input-group x">
+                                    <span>X</span>
+                                    <input type="number" id="scale-x" value="1" step="0.1" min="0.01" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group y">
+                                    <span>Y</span>
+                                    <input type="number" id="scale-y" value="1" step="0.1" min="0.01" onchange="updateTransform()">
+                                </div>
+                                <div class="input-group z">
+                                    <span>Z</span>
+                                    <input type="number" id="scale-z" value="1" step="0.1" min="0.01" onchange="updateTransform()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المواد -->
+            <div class="panel-section" id="material-panel">
+                <div class="panel-header" onclick="togglePanel('material')">
+                    <span>المادة</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="panel-content" id="material-content">
+                    <div class="property-group">
+                        <div class="property-row">
+                            <label>اللون</label>
+                            <input type="color" id="material-color" value="#4a90d9" onchange="updateMaterial()">
+                        </div>
+                        <div class="property-row">
+                            <label>المعدنية</label>
+                            <input type="range" id="material-metalness" min="0" max="100" value="0" onchange="updateMaterial()">
+                        </div>
+                        <div class="property-row">
+                            <label>الخشونة</label>
+                            <input type="range" id="material-roughness" min="0" max="100" value="50" onchange="updateMaterial()">
+                        </div>
+                        <div class="property-row">
+                            <label>الشفافية</label>
+                            <input type="range" id="material-opacity" min="0" max="100" value="100" onchange="updateMaterial()">
+                        </div>
+                        <div class="property-row">
+                            <label>الانبعاث</label>
+                            <input type="color" id="material-emissive" value="#000000" onchange="updateMaterial()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الإضاءة -->
+            <div class="panel-section" id="light-panel">
+                <div class="panel-header" onclick="togglePanel('light')">
+                    <span>الإضاءة</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="panel-content" id="light-content">
+                    <div class="property-group">
+                        <div class="property-row">
+                            <label>اللون</label>
+                            <input type="color" id="light-color" value="#ffffff" onchange="updateLight()">
+                        </div>
+                        <div class="property-row">
+                            <label>الشدة</label>
+                            <input type="range" id="light-intensity" min="0" max="200" value="100" onchange="updateLight()">
+                        </div>
+                        <div class="property-row">
+                            <label>الظلال</label>
+                            <input type="checkbox" id="light-shadows" checked onchange="updateLight()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الكائنات -->
+            <div class="panel-section" id="objects-panel">
+                <div class="panel-header" onclick="togglePanel('objects')">
+                    <span>قائمة الكائنات</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="panel-content" id="objects-content">
+                    <div id="objects-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط الحالة السفلي -->
+    <div id="status-bar">
+        <div class="status-left">
+            <span id="status-mode">وضع الكائن</span>
+            <span id="status-tool">أداة: اختيار</span>
+        </div>
+        <div class="status-right">
+            <span id="status-info">Easy3D - برنامج التصميم ثلاثي الأبعاد للمبتدئين</span>
+        </div>
+    </div>
+
+    <!-- نافذة المساعدة -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>المساعدة والاختصارات</h2>
+                <button class="close-btn" onclick="toggleHelp()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcut-group">
+                    <h3>الأدوات</h3>
+                    <div class="shortcut-row"><kbd>W</kbd> اختيار</div>
+                    <div class="shortcut-row"><kbd>G</kbd> تحريك</div>
+                    <div class="shortcut-row"><kbd>R</kbd> تدوير</div>
+                    <div class="shortcut-row"><kbd>S</kbd> تحجيم</div>
+                </div>
+                <div class="shortcut-group">
+                    <h3>الكاميرا</h3>
+                    <div class="shortcut-row"><kbd>عجلة الفأرة</kbd> تقريب/تبعيد</div>
+                    <div class="shortcut-row"><kbd>Shift + عجلة</kbd> تحريك</div>
+                    <div class="shortcut-row"><kbd>_MIDDLE</kbd> دوران</div>
+                    <div class="shortcut-row"><kbd>Numpad 1</kbd> أمامي</div>
+                    <div class="shortcut-row"><kbd>Numpad 3</kbd> يمين</div>
+                    <div class="shortcut-row"><kbd>Numpad 7</kbd> علوي</div>
+                </div>
+                <div class="shortcut-group">
+                    <h3>أخرى</h3>
+                    <div class="shortcut-row"><kbd>Shift+D</kbd> تكرار</div>
+                    <div class="shortcut-row"><kbd>X</kbd> حذف</div>
+                    <div class="shortcut-row"><kbd>Ctrl+Z</kbd> تراجع</div>
+                    <div class="shortcut-row"><kbd>Ctrl+Y</kbd> إعادة</div>
+                    <div class="shortcut-row"><kbd>Ctrl+S</kbd> حفظ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
